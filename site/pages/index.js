@@ -1,8 +1,49 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
+import Head from "next/head";
+import Header from "./views/header";
+import Footer from "./views/footer";
+import styles from "../styles/Home.module.css";
 
 export default function Home() {
+  return (
+    <div className={styles.container}>
+      <Head>
+        <title>2minutes2code</title>
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
+      <Header />
+      <body>
+        <div className={styles.grid}>
+          <a href="/views/detailsCard" className={styles.card}>
+            <h3>Lorem Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </a>
+          <a href="/views/detailsCard" className={styles.card}>
+            <h3>Lorem Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </a>
+          <a href="/views/detailsCard" className={styles.card}>
+            <h3>Lorem Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </a>
+          <a href="/views/detailsCard" className={styles.card}>
+            <h3>Lorem Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </a>
+          <a href="/views/detailsCard" className={styles.card}>
+            <h3>Lorem Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </a>
+          <a href="/views/detailsCard" className={styles.card}>
+            <h3>Lorem Ipsum</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </a>
+          <a href="" className={styles.new}>
+            <h3>Ajouter un code</h3>
+          </a>
+        </div>
+      </body>
+      <Footer />
+      {/* export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
@@ -17,7 +58,7 @@ export default function Home() {
         </h1>
 
         <p className={styles.description}>
-          Get started by editing{' '}
+          Get started by editing{" "}
           <code className={styles.code}>pages/index.js</code>
         </p>
 
@@ -63,7 +104,7 @@ export default function Home() {
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
-      </footer>
+      </footer> */}
     </div>
-  )
+  );
 }
