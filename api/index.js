@@ -2,37 +2,38 @@ const express = require('express');
 const app = express();
 
 //firebase BEG
-// var admin = require("firebase-admin");
+var admin = require("firebase-admin");
 
-// var serviceAccount = require("../minutes2code-firebase-adminsdk-z51qw-ff782543bf.json");
+var serviceAccount = require("../minutes2code-firebase-adminsdk-z51qw-ff782543bf.json");
 
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount)
-// });
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
 //firbase END
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Tableau de codeblocks de test
-const codeblocks = [
-  {
-    id: 1,
-    title: "Calcul de Pourçentage",
-    tag: ["Test","Dragon"],
-    code: "Ceci est un code de calcul de pourçentage",
-    createdAt: "19/05/2022",
-    updatedAt: "19/05/2022"
-  },
-  {
-    id: 2,
-    title: "Afficher une image en html",
-    tag : ["Voila", "Image"],
-    code: "Comment insérer une image en html",
-    createdAt: "19/05/2022",
-    updatedAt: "19/05/2022"
-  },
-];
+// const codeblocks = [
+//   {
+//     id: 1,
+//     title: "Calcul de Pourçentage",
+//     tag: ["Test","Dragon"],
+//     code: "Ceci est un code de calcul de pourçentage",
+//     createdAt: "19/05/2022",
+//     updatedAt: "19/05/2022"
+//   },
+//   {
+//     id: 2,
+//     title: "Afficher une image en html",
+//     tag : ["Voila", "Image"],
+//     code: "Comment insérer une image en html",
+//     createdAt: "19/05/2022",
+//     updatedAt: "19/05/2022"
+//   },
+// ];
+const codeblocks=[];
 
 //fonction GET
 app.get('/codeblocks', (req, res) => {
