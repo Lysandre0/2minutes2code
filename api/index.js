@@ -1,15 +1,7 @@
 const express = require('express');
+const { Timestamp } = require('firebase-admin/firestore');
 const app = express();
-
-//firebase BEG
-var admin = require("firebase-admin");
-
-var serviceAccount = require("../minutes2code-firebase-adminsdk-z51qw-ff782543bf.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-//firbase END
+const firestore = require("./config-firebase.js");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,85 +25,94 @@ app.use(express.urlencoded({ extended: true }));
 //     updatedAt: "19/05/2022"
 //   },
 // ];
-const codeblocks=[];
+// const codeblocks=[];
 
 //fonction GET
-app.get('/codeblocks', (req, res) => {
+app.get('/codeblocks', async (req, res) => {
   const {id} = req.query;
 
-  const result =
-    id === undefined || id === "" ? codeblocks : codeblocks.filter((codeblock)=>codeblock.id == id);
+  const result = await firestore.collection('codeblocks').get();
+  const codeblocks=[];
 
+  for (const dataCodeBlock of result.docs) {
+    const codeblock = {};
+    codeblock.id = dataCodeBlock.id;
+    codeblock.title = dataCodeBlock.data().title;
+    codeblock.code = dataCodeBlock.data().code;
+    codeblock.tag = dataCodeBlock.data().tag;
 
-  res.status(200).json(result);
+    codeblock.createdat = dataCodeBlock.data().createdat.toDate();
+    codeblock.updatedat = dataCodeBlock.data().updatedat.toDate();
+
+    codeblocks.push(codeblock);
+  };
+
+  // res.status(200).json(result);
+  res.status(200).json(codeblocks);
 });
 
 //fonction POST
-app.post("/codeblocks", (req, res)=>{
+app.post("/codeblocks", async (req, res)=>{
   const codeBlockToSave = req.body;
-
-  console.log(codeBlockToSave);
-
+  // console.log(codeBlockToSave);
   const newCodeBlock =[];
 
-  for (const codeblock of codeBlockToSave) {
-    const lastCodeBlock = codeblocks.reduce((max, obj) => (max.id > obj.id ? max : obj));
 
-    codeblock.id = lastCodeBlock.id +1;
+  for (const codeblock of codeBlockToSave) {
+
+    const newCodeId = await firestore.collection("codeblocks").add({
+      title: codeblock.title,
+      code: codeblock.code,
+      tag: codeblock.tag,
+      createdat: new Date(),
+      updatedat: new Date()
+    });
+    codeblock.id = newCodeId.id;
     newCodeBlock.push(codeblock);
-    codeblocks.push(codeblock);
   };
 
   res.status(201).json(newCodeBlock);
 });
 
 //fonction PUT
-app.put("/codeblocks/:id", (req, res)=>{
-  const {id} = req.params;
+app.put("/codeblocks", async (req, res)=>{
   const modifyCodeBlocks = req.body;
   const codeBlockModified = [];
 
   for (const modifyCodeBlock of modifyCodeBlocks) {
-      const {title, tag, code} = modifyCodeBlock;
+    const {id, title, tag, code} = modifyCodeBlock;
+    const codeblock = firestore.collection("codeblocks").doc(id);
 
-    const codeblock = codeblocks.find((codeblock) => codeblock.id === parseInt(id));
-
-    if(codeblock) {
-      if(title) { 
-        codeblock.title = title;
-      };
-      if(tag) {
-        codeblock.tag = tag;
-      };
-      if(code) {
-        codeblock.code = code;
-      };
-      codeBlockModified.push(codeblock);
+    if (codeblock) {
+      await codeblock.update({
+        title: title,
+        tag: tag,
+        code: code,
+        updatedat: new Date()
+      });
+      codeBlockModified.push(modifyCodeBlock);
+    }else{
+      res.status(404).json({message : "Code Not Found"});
     };
   };
-
-
-
-  console.log(codeblocks);
-
+    
   res.status(200).json(codeBlockModified);
 });
 
 //fonction DELETE
-app.delete("/codeblocks/:id", (req, res)=>{
-  const { id } = req.params;
+app.delete("/codeblocks", async (req, res)=>{
+  const codeBlocksToDelete = req.body;
+  for (const codeBlockToDelete of codeBlocksToDelete) {
+    const {id} = codeBlockToDelete;
+    const codeblock = firestore.collection("codeblocks").doc(id);
 
-  const codeblock = codeblocks.find((codeblock) => codeblock.id === parseInt(id));
-
-  if (codeblock) {
-    codeblocks.splice(codeblocks.indexOf(codeblock), 1);
-  }else{
-    res.status(404).json({message : "Code Not Found"});
-    return;
-  };
-
-  console.log(codeblocks);
-  res.status(202).json(codeblocks)
+    if(codeblock) {
+      await codeblock.delete();
+    }else{
+      res.status(404).json({message : "Code Not Found"});
+    };
+  }
+  res.status(202).json([]);
 });
 
 //Ce qui permet de démarrer le serveur sur le port x ( ici 3001)
