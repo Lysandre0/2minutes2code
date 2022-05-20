@@ -1,15 +1,7 @@
 const express = require('express');
+const { Timestamp } = require('firebase-admin/firestore');
 const app = express();
-
-//firebase BEG
-var admin = require("firebase-admin");
-
-var serviceAccount = require("../minutes2code-firebase-adminsdk-z51qw-ff782543bf.json");
-
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
-//firbase END
+const firestore = require("./config-firebase.js");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -33,33 +25,50 @@ app.use(express.urlencoded({ extended: true }));
 //     updatedAt: "19/05/2022"
 //   },
 // ];
-const codeblocks=[];
+// const codeblocks=[];
 
 //fonction GET
-app.get('/codeblocks', (req, res) => {
+app.get('/codeblocks', async (req, res) => {
   const {id} = req.query;
 
-  const result =
-    id === undefined || id === "" ? codeblocks : codeblocks.filter((codeblock)=>codeblock.id == id);
+  const result = await firestore.collection('codeblocks').get();
+  const codeblocks=[];
 
+  for (const dataCodeBlock of result.docs) {
+    const codeblock = {};
+    codeblock.id = dataCodeBlock.id;
+    codeblock.title = dataCodeBlock.data().title;
+    codeblock.code = dataCodeBlock.data().code;
+    codeblock.tag = dataCodeBlock.data().tag;
 
-  res.status(200).json(result);
+    codeblock.createdat = dataCodeBlock.data().createdat.toDate();
+    codeblock.updatedat = dataCodeBlock.data().updatedat.toDate();
+
+    codeblocks.push(codeblock);
+  };
+
+  // res.status(200).json(result);
+  res.status(200).json(codeblocks);
 });
 
 //fonction POST
-app.post("/codeblocks", (req, res)=>{
+app.post("/codeblocks", async (req, res)=>{
   const codeBlockToSave = req.body;
-
   console.log(codeBlockToSave);
-
   const newCodeBlock =[];
 
-  for (const codeblock of codeBlockToSave) {
-    const lastCodeBlock = codeblocks.reduce((max, obj) => (max.id > obj.id ? max : obj));
 
-    codeblock.id = lastCodeBlock.id +1;
+  for (const codeblock of codeBlockToSave) {
+
+    const newCodeId = await firestore.collection("codeblocks").add({
+      title: codeblock.title,
+      code: codeblock.code,
+      tag: codeblock.tag,
+      createdat: new Date(),
+      updatedat: new Date()
+    });
+    codeblock.id = newCodeBlock.id;
     newCodeBlock.push(codeblock);
-    codeblocks.push(codeblock);
   };
 
   res.status(201).json(newCodeBlock);
