@@ -5,16 +5,16 @@ export default function Card() {
   return (
     <div>
       <div className={styles.headerCard}>
-        <a className={styles.arrow} href="#">
+        <a className={styles.arrow} href="javascript: history.go(-1)">
           <img src="/arrow.svg" alt="" height={30} width={30} />
         </a>
         <h3 className={styles.titleCard}>Lorem Ipsum</h3>
         <div className={styles.svgcontainer}>
           <a href="#">
-            <img className={styles.iconesvg} src="/edit.svg" alt="" />
+            <img className={styles.editsvg} src="/edit.svg" alt="" />
           </a>
           <a href="#">
-            <img className={styles.iconesvg} src="/delete.svg" alt="" />
+            <img className={styles.deletesvg} src="/delete.svg" alt="" />
           </a>
         </div>
       </div>
