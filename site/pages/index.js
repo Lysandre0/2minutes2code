@@ -43,7 +43,11 @@ export default function Home() {
         </div>
       </body>
       <Footer />
-      {/* export default function Home() {
+    </div>
+  );
+}
+{
+  /* export default function Home() {
   return (
     <div className={styles.container}>
       <Head>
@@ -104,7 +108,5 @@ export default function Home() {
             <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
           </span>
         </a>
-      </footer> */}
-    </div>
-  );
+      </footer> */
 }

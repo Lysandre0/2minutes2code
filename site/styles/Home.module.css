@@ -17,6 +17,7 @@
   justify-content: right;
   flex-direction: column;
   padding: 30px;
+  margin-bottom: 50px;
 }
 .card{
   background: #FFFFFF;
@@ -34,16 +35,62 @@
   color: #EEEEEE;
 }
 .footer {
-  position: sticky;
+  position:fixed;
   background: #212121;
   color: #EEEEEE;
-  display: flex;
+  width: 100%;
   bottom:0;
   text-align: center;
   justify-content: center;
   align-items: center;
 }
+.headerCard{
+  position: absolute;
+  top: 0;
+  margin:0;
+  padding: 0;
+  z-index: 999;
+  box-shadow: 0px 5px 17px -7px rgba(0,0,0,0.69);
+  display: flex;
+  color: #EEEEEE;
+  text-align: center;
+  width:100%;
+  background-color: #212121;
+  justify-content: space-between;
+  align-items: center;
+}
+.titleCard{
+  margin-left: 100px;
+}
+.arrow{
+  margin-left: 40px;
+  margin-top:5px;
+  filter:invert(1);
+}
+.svgcontainer{
+  margin-top: 6px;
+}
+.iconesvg{
+  height: 30px;
+  width: 30px;
+  filter: invert(1);
+  margin-right: 60px;
+}
+.containerCard{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding-top: 13%;
+  padding-bottom:12%;
+  background: #EEEEEE;
 
+}
+.contentCard{
+  color: #9E9E9E;
+  background-color: #eeeeee;
+  width: 60%;
+}
 
 /* .container {
   padding: 0 2rem;

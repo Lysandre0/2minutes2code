@@ -23,7 +23,7 @@ export default function Header() {
   };
 
   return (
-    <header className={styles.header}>
+    <div className={styles.header}>
       <h1 className={styles.title}>2minutes2code</h1>
       <Autocomplete
         style={{ width: 300 }}
@@ -40,6 +40,6 @@ export default function Header() {
           />
         )}
       />
-    </header>
+    </div>
   );
 }
