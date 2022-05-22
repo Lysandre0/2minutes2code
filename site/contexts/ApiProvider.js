@@ -1,23 +1,41 @@
-import { useEffect } from "react";
+import { createContext, useContext, useState } from "react";
 
+const ApiContext = createContext();
 
-export const ApiProvider = () => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
+export const ApiProvider = ({children}) => {
+  const [data, setData] = useState(null); 
 
-  useEffect(()=>{
-    const loadData = async ()=> {
-      setLoading(true);
-      const response = await fetch('http://localhost:3001/codeblocks');
+  // const axios = require('axios');
+  // const variabletoto = axios.get('http://localhost:3001/codeblocks');
 
-      setData(response.data);
+  // async function getData(){
+  //   try {
+  //     const response = await axios.get('http://localhost:3001/codeblocks');
+  //     console.log(response);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
-      setLoading(false);
+  async function getData() {
+    const response = await axios.get('http://localhost:3001/codeblocks');
+    console.log(response);
+    setData(response);
+  };
 
-      console.log(data);
-    };
-
-    loadData();
-  }, []);
+  return ( 
+    <ApiContext.Provider>
+      {children}
+    </ApiContext.Provider>
+  );
 };
 
+export const useApi = () => {
+  const context = useContext(ApiContext);
+
+  if (context === undefined) {
+    throw new Error("useApi must be used within and ApiProvider");
+  }
+
+  return context;
+};

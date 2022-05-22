@@ -2,8 +2,11 @@ import Head from "next/head";
 import Header from "./views/header";
 import Footer from "./views/footer";
 import styles from "../styles/Home.module.css";
+import { useState } from "react";
+
 
 export default function Home() {
+
   return (
     <div className={styles.container}>
       <Head>
